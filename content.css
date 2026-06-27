@@ -1,17 +1,12 @@
-.zef-hidden {
+/* Non-matching listings: hidden. Matches keep Zillow's native styling. */
+.zcf-hide {
   display: none !important;
 }
 
-.zef-badge {
-  position: absolute;
-  top: 6px;
-  left: 6px;
-  background: #006aff;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 2px 6px;
-  border-radius: 4px;
-  z-index: 9999;
-  pointer-events: none;
+/* Subtle highlight on matches so the user sees the filter took effect.
+   Remove or tone down if it clashes with Zillow's card chrome. */
+.zcf-keep {
+  outline: 2px solid #2563eb;
+  outline-offset: -2px;
+  border-radius: 8px;
 }

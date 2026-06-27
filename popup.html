@@ -1,99 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8" />
-<title>Zillow Extra Filter</title>
-<style>
-  :root {
-    --ink: #1c2024;
-    --muted: #6b7280;
-    --line: #e5e7eb;
-    --accent: #006aff;
-    --bg: #ffffff;
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    width: 280px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    color: var(--ink);
-    background: var(--bg);
-  }
-  .wrap { padding: 16px; }
-  h1 {
-    font-size: 14px;
-    font-weight: 600;
-    margin: 0 0 2px;
-  }
-  .sub {
-    font-size: 12px;
-    color: var(--muted);
-    margin: 0 0 16px;
-  }
-  label {
-    display: block;
-    font-size: 12px;
-    font-weight: 500;
-    margin-bottom: 4px;
-    margin-top: 12px;
-  }
-  input {
-    width: 100%;
-    padding: 6px 8px;
-    font-size: 13px;
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    background: var(--bg);
-    color: var(--ink);
-  }
-  input:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
-  .hint {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-  button {
-    width: 100%;
-    margin-top: 16px;
-    padding: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    color: #fff;
-    background: var(--accent);
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  button:active { opacity: 0.85; }
-  #status {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 8px;
-    min-height: 14px;
-  }
-</style>
-</head>
-<body>
-  <div class="wrap">
-    <h1>Extra Filter</h1>
-    <p class="sub">Applied on top of Zillow's own filters.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Zillow Custom Filter</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>Zillow Custom Filter</h1>
+    <p class="sub">
+      Add a criterion Zillow can't filter on (e.g. "has a den"). Your existing
+      Zillow filters are read automatically and respected.
+    </p>
 
-    <label for="minSqftPerBed">Min sqft per bedroom</label>
-    <input type="number" id="minSqftPerBed" placeholder="e.g. 250" />
+    <label for="prompt">Your custom criteria</label>
+    <textarea
+      id="prompt"
+      rows="3"
+      placeholder="e.g. 1b1b with a den; quiet street; in-unit laundry"
+    ></textarea>
 
-    <label for="maxPricePerSqft">Max price per sqft ($)</label>
-    <input type="number" id="maxPricePerSqft" placeholder="e.g. 600" />
+    <label for="keyType">Provider</label>
+    <select id="keyType">
+      <option value="anthropic">Anthropic API key</option>
+      <option value="bedrock">AWS Bedrock</option>
+    </select>
 
-    <label for="excludeKeywords">Exclude addresses containing</label>
-    <input type="text" id="excludeKeywords" placeholder="comma-separated, e.g. Hwy, Blvd" />
-    <p class="hint">Matches against the listing's address text.</p>
+    <!-- Anthropic fields -->
+    <div id="anthropicFields" class="provider-fields">
+      <label for="anthropicKey">Anthropic API key</label>
+      <input id="anthropicKey" type="password" placeholder="sk-ant-..." />
+    </div>
 
-    <button id="apply">Apply filters</button>
-    <div id="status"></div>
-  </div>
-  <script src="popup.js"></script>
-</body>
+    <!-- Bedrock fields -->
+    <div id="bedrockFields" class="provider-fields" hidden>
+      <label for="awsAccessKey">AWS Access Key ID</label>
+      <input id="awsAccessKey" type="text" placeholder="AKIA..." />
+      <label for="awsSecretKey">AWS Secret Access Key</label>
+      <input id="awsSecretKey" type="password" placeholder="..." />
+      <label for="awsSessionToken">AWS Session Token (optional)</label>
+      <input id="awsSessionToken" type="password" placeholder="for temporary creds" />
+      <label for="awsRegion">Region</label>
+      <input id="awsRegion" type="text" value="us-east-1" placeholder="us-east-1" />
+      <p class="warn">
+        ⚠️ AWS keys are stored in the browser and signed client-side. Use a
+        scoped, short-lived credential — never a root key.
+      </p>
+    </div>
+
+    <div class="row">
+      <label class="checkbox">
+        <input id="rememberKey" type="checkbox" checked />
+        Remember credentials on this device
+      </label>
+    </div>
+
+    <button id="testBtn" class="secondary">Test connection</button>
+    <button id="runBtn">Filter listings</button>
+    <button id="resetBtn" class="secondary">Reset page</button>
+
+    <div id="status" class="status"></div>
+
+    <script src="popup.js"></script>
+  </body>
 </html>

@@ -1,20 +1,29 @@
 {
   "manifest_version": 3,
-  "name": "Zillow Extra Filter",
+  "name": "Zillow Custom Filter (Claude)",
   "version": "0.1.0",
-  "description": "Apply your own filter criteria on top of a Zillow search results page.",
-  "permissions": ["storage"],
-  "host_permissions": ["https://www.zillow.com/*"],
+  "description": "Filter Zillow listings with a custom natural-language prompt powered by Claude (Anthropic API or AWS Bedrock).",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://api.anthropic.com/*",
+    "https://bedrock-runtime.*.amazonaws.com/*",
+    "https://*.zillow.com/*",
+    "https://*.zillowstatic.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Zillow Custom Filter"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
   "content_scripts": [
     {
-      "matches": ["https://www.zillow.com/*"],
+      "matches": ["https://*.zillow.com/*"],
       "js": ["content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }
-  ],
-  "action": {
-    "default_popup": "popup.html",
-    "default_title": "Zillow Extra Filter"
-  }
+  ]
 }
